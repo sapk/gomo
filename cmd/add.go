@@ -65,16 +65,26 @@ var addCmd = &cobra.Command{
 		}
 
 		fmt.Println("Adding : " + FQDN) //+ strings.Join(args, " ")
-
-		FQDNs := viper.GetStringMapStringSlice("fqdn")
-		FQDNElm, ok := FQDNs[FQDN]
+		/*
+        for i := 1; i < len(args); i++ {
+            fmt.Println("Echo: " + strings.Join(args, " "))
+        }
+        */
+        
+        
+		FQDNs := viper.GetStringMap("fqdn")
+		fmt.Printf("%v\n", FQDNs);
+		FQDNElm, ok := FQDNs[FQDN].([]string)
+		fmt.Printf("%v\n", FQDNs);
+		fmt.Printf("%v\n", FQDNElm);
 		if !ok {
 			//FQDNs[FQDN]
-			FQDNs[FQDN] = []string{"/"} //TODO parse sub url
+			FQDNs[FQDN] = append(args[1:len(args)], "/") //TODO parse sub url and check
 		} else {
 			fmt.Println("Getting old value : " + strings.Join(FQDNElm, ",")) //+ strings.Join(args, " ")
-			FQDNs[FQDN] = []string{"/"}                                      //TODO parse sub url and merge
+			FQDNs[FQDN] = append(FQDNElm, args[1:len(args)]...) //TODO parse sub url and merge
 		}
+		fmt.Printf("%v\n", FQDNs);
 		viper.Set("fqdn", FQDNs)
 
 		return saveConfig()
