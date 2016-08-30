@@ -24,7 +24,13 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
+
+	"github.com/sapk/gomo/modules/watchers/change"
 )
+
+var outFile string
+var output *viper.Viper
 
 // monitorCmd represents the monitor command
 var monitorCmd = &cobra.Command{
@@ -33,10 +39,25 @@ var monitorCmd = &cobra.Command{
 	Long:  `Monitor the website and servers presents in the configuration.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("monitor called")
+		change.Watch(output.Sub("web"))
 	},
 }
 
 func init() {
+	cobra.OnInitialize(initOutput)
+
+	monitorCmd.LocalFlags().StringVar(&outFile, "output", "output.json", "output file (default is ./output.json)")
 	RootCmd.AddCommand(monitorCmd)
 	//viper.OnConfigChange
+}
+
+// initOutput prepare the output file
+func initOutput() {
+	output = viper.New()
+	fmt.Printf("Output file : %s\n", outFile)
+	output.SetConfigFile(outFile)
+
+	if err := output.ReadInConfig(); err == nil {
+		fmt.Println("Reloading output file:", output.ConfigFileUsed())
+	}
 }

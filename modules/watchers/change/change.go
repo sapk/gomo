@@ -18,33 +18,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-package cmd
+package change
 
-import (
-	"fmt"
 
-	"github.com/spf13/cobra"
-)
-
-var (
-	serverInterface string
-	serverPort      int
-)
-
-// serveCmd represents the serve command
-var serveCmd = &cobra.Command{
-	Use:   "serve",
-	Short: "Serve the analytics",
-	Long:  `Serve the analytics in dynamic web interface through built-in webserver.`,
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("serve called")
-	},
-}
-
-func init() {
-	serveCmd.Flags().IntVarP(&serverPort, "port", "p", 8080, "port on which the server will listen")
-	serveCmd.Flags().StringVarP(&serverInterface, "bind", "", "127.0.0.1", "interface to which the server will bind")
-
-	RootCmd.AddCommand(serveCmd)
-	//viper.OnConfigChange
+// Watch is TODO.
+func Watch() {
 }
